@@ -1,0 +1,128 @@
+\chapter{Analóg áramkörök digitális modellezése}
+
+\section{Lineáris áramkörök modellezése}
+
+A lineáris áramkörök modellezésének a leggyakoribb módszereit említem meg \cite{transformations} \cite{eulers}.
+
+Egy lineáris, idő-invariáns rendszert leír az átviteli függvénye, aminek a definíciója  a kimenet 
+Laplace-transzformáltjának és a bemenet Laplace-transzformáltjának hányadosa.
+\begin{equation}
+    H(s)=\frac{Y(s)}{U(s)}
+\end{equation}
+Ennek a videlkedésnek a megvalósítása a cél diszkrét időben.
+
+\subsection{Előrelépő Euler módszer}
+
+Az előrelépő (explicit) Euler módszer a deriváltat a következő és az aktuális állapotváltozóból fejezi ki, a többi tagnak
+az ezelőtti állapotát használja.
+\begin{equation}
+    \mathbf{\dot{x}}=\frac{\mathbf{x}[n+1]-\mathbf{x}[n]}{\Delta{}t}
+\label{fwEuler}
+\end{equation}
+\begin{equation}
+    \mathbf{\dot{x}}=\frac{\mathbf{x}[n+1]-\mathbf{x}[n]}{\Delta{}t}=\mathbf{A}\mathbf{x}[n]+\mathbf{Bu}[n]
+\end{equation}
+Az $s$-re kifejezve \ref{fwEuler} alapján:
+\begin{equation}
+    s=\frac{z-1}{T}=\frac{1-z^{-1}}{Tz^{-1}}
+\label{fwEulers}
+\end{equation}
+Az előrelépő Euler módszer nem mindig fog stabil folytonos idejű rendszerből stabil diszkrét idejű rendszert 
+eredményezni, ami \ref{fwEulers}-ből egyértelműen kifejezhető \cite{transformations}.
+
+\subsection{Hátralépő Euler módszer}
+
+A hátralépő (implicit) Euler módszer a deriváltat az aktuális és az ezelőtti állapotváltozóból fejezi ki, a többi tagnak
+az aktuális állapotát használja.
+\begin{equation}
+    \mathbf{\dot{x}}=\frac{\mathbf{x}[n]-\mathbf{x}[n-1]}{\Delta{}t}
+\label{bwEuler}
+\end{equation}
+\begin{equation}
+    \mathbf{\dot{x}}=\frac{\mathbf{x}[n]-\mathbf{x}[n-1]}{\Delta{}t}=\mathbf{A}\mathbf{x}[n]+\mathbf{Bu}[n]
+\end{equation}
+Az $s$-re kifejezve \ref{bwEuler} alapján:
+\begin{equation}
+    s=\frac{1-z^{-1}}{T}=\frac{z-1}{Tz}
+\label{bwEulers}
+\end{equation}
+A hátralépő Euler módszerrel modellezett folytonos idejű rendszer mindig stabil diszkrét idejű rendszerhez vezet, 
+ami \ref{bwEulers} alapján belátható \cite{transformations}.  
+
+\subsection{Bilineáris transzformáció}
+
+Egyik leggyakoribb módszer a bilineáris transzformáció, amely az s-síkból a z-síkba transzformál a trapézszabály, azaz 
+az előre- és a hátralépő Euler módszer átlaga szerint.
+\begin{equation}
+    s=\frac{2}{T}\frac{z-1}{z+1}
+    \label{bilin}
+\end{equation}
+A transzformáció után a rendszer stabilitása megmarad, amit \ref{bilin}-ből könnyen ki lehet fejezni \cite{transformations}.
+
+\subsection{Impulzus invariáns transzformáció}
+
+Az impulzus invariáns transzformációhoz ugyanúgy szükség van a transzformálni kívánt rendszer átviteli függvényére.
+\begin{equation}
+    H(s)=\frac{B(s)}{A(s)}\triangleq\frac{b_0s^{N-1}+b_1s^{N-2}+...+b_{N-2}s+b_{N-1}}{s^N+a_1s^{N-1}+...+a_{N-1}s+b_{N}}
+\end{equation}
+Az átviteli függvényt részlettörtekre bontva, inverz Laplace-transzformálva, majd mintavételezve:
+\begin{equation}
+    H(s)=\sum_{i=1}^{N}\frac{K_i}{s-s_i}
+\end{equation}
+\begin{equation}
+    h(t)=\sum_{i=1}^{N}K_ie^{s_it}
+\end{equation}
+\begin{equation}
+    h[n]=\sum_{i=1}^{N}K_ie^{s_inT}
+\end{equation}
+Ezt z-transzformálva kapjuk meg az impulzus-invariáns transzformáció segítségével megtervezett digitális 
+szűrőt.
+\begin{equation}
+    H(z)=\sum_{i=1}^{N}\frac{K_i}{1-e^{s_iT}z^{-1}}
+    \label{impinv}
+\end{equation}
+A transzformáció után a rendszer stabilitása megmarad, ami szintén könnyen belátható \ref{impinv} szerint \cite{transformations}.
+
+Akármelyik transzformáció után a z-tartománybeli átviteli függvényt át kell rendezni $Y(z^{-1})$-re és $U(z^{-1})$-re, és inverz z-
+transzformáció segítségével kapható meg a rendszeregyenletet.
+
+\section{Nemlineáris elemek}
+Ha a rendszerbe memória nélküli nemlinearitás kerül, akkor már nincs lehetőség az átviteli függvényt felírni. Így 
+mindenképpen az állapotváltozós leírás segítségével kell modellezni a hálózatot. Ekkor az állapotváltozós leírásban 
+meg fog jelenni a nemlineáris függvény.
+\begin{equation}
+    \mathbf{\dot{x}}=\mathbf{A}\mathbf{x}+\mathbf{Bu}+\mathbf{Cf}(\mathbf{x},\mathbf{u})
+\end{equation}
+
+Leggyakrabban a megoldáshoz az Euler módszereket és a Runge-Kutta módszerek használatosak \cite{eulers} \cite{rungekutta} \cite{rkk}.
+
+\subsection{Előrelépő Euler módszer}
+Az előrelépő Euler módszer használatánál az egyenletrendszer egyszerűen megoldható lesz, átrendezés után az előző 
+állapotokat behelyettesítve kapható meg a következő állapot.
+\begin{equation}
+    \mathbf{x}[n+1]=\mathbf{A'}\mathbf{x}[n]+\mathbf{B'u}[n]+\mathbf{C'f}(\mathbf{x}[n], \mathbf{u}[n])
+\end{equation}
+Ezt átrendezve:
+\begin{equation}
+    \mathbf{x}[n]=\mathbf{A'}\mathbf{x}[n-1]+\mathbf{B'u}[n-1]+\mathbf{C'f}(\mathbf{x}[n-1],\mathbf{u}[n-1])
+\end{equation}
+Ha elég nagy a mintavételi frekvencia, akkor célszerű ezt a módszert választani az egyszerűsége miatt, viszont 
+gyakran valós idejű feldolgozás esetén bonyolultabb áramköröknél ez nem szokott előfordulni. Ha ez nem adott, akkor 
+a rendszer nem lesz stabil.
+
+\subsection{Hátralépő Euler módszer}
+A hátrelépő Euler módszer használatával új problémák merülnek fel, viszont a stabilitási kérdés megoldódik. 
+Az állapotváltozós leírás transzformálása és rendezése egy implicit egyenletrendszerhez vezet.
+\begin{equation}
+    \mathbf{x}[n]=\mathbf{A'}\mathbf{x}[n-1]+\mathbf{B'u}[n]+\mathbf{C'f}(\mathbf{x}[n],\mathbf{u}[n])
+\end{equation}
+Látható, hogy az egyenletrendszer bal és jobb oldalon is (jobb oldalon a függvény hasában) megtalálható az $\mathbf{x}[n]$ 
+állapotváltozó. Az implicit egyenlet valamely zérushely-kereső algoritmussal megoldandó 
+(intervallumfelezés, Newton-Rhapson stb.). A nehézségeket pedig az ellensúlyozza, hogy az implicit egyenlet megoldásának 
+árán stabil folytonos idejű rendszerből stabil diszkrét idejű rendszer lesz.
+
+\subsection{Runge-Kutta módszerek}
+A Runge-Kutta módszereket nagyon gyakran szokták használni nemlineáris rendszerek szimulációjánál. Alapötletük hasonló, 
+mint az Euler módszereknek, viszont itt több pontból közelítik a deriváltat. Így ha a az eredeti rendszernek a nagyon 
+pontos modellezése a cél, akkor jobb eredményt biztosítanak, mint az Euler módszerek. Viszont nagyobb a számításigényük. 
+Leggyakrabban használt verziójuk az RK2 és RK4 \cite{rkk} \cite{rungekutta}.

@@ -1,0 +1,97 @@
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\selecthungarian
+
+%----------------------------------------------------------------------------
+% Abstract in Hungarian
+%----------------------------------------------------------------------------
+\chapter*{Összefoglalás}\addcontentsline{toc}{chapter}{Összefoglalás}
+
+Napjainkban a zeneiparban és a zenészek körében az effektek és egyéb hangszínezés céljából alkalmazott fizikai eszközök helyett egyre gyakrabban
+használnak számítógépen futtatható pluginokat. Ezek a pluginok valós időben futnak, és gyakran a fizikai effekt áramköre alapján
+valósítják meg őket, hogy ugyanazt a hangzásélményt tudják adni és a hátrányaikat ki tudják küszöbölni.
+
+A fizikai hardverhez képest a pluginok előnyének számít, hogy nem foglalnak helyet (ez jelentős például egy gitárerősítő vagy gitárláda esetében), az áruk
+gyakran kedvezőbb, a felvételkészítés is egyszerűbb velük és mindösszesen egy számítógép kell a használatukhoz.
+
+Az előnyök miatt sok stúdió váltott át az analóg világból a digitálisba. A pluginok egyre jobban terjednek el az élő zenében, és már a professzionális és hobbi 
+zenészek is egyre gyakrabban használják.
+
+Ezeknek a pluginoknak az elkészítése viszont nem egyszerű. A zenei eszközök áramkörében gyakran találhatóak nemlineáris elemek (diódák, elektroncsövek stb.), amelyek megnehezítik a 
+digitális modellezésüket.
+
+Ez főleg kihívást jelent, amikor olyan plugint akar valaki elkészíteni, amelyik valós időben fut. A valós idejűség miatt a mintavételi frekvencia nem lehet akármekkora, így ez a 
+megkötés szűkíti az alaklamazható módszerek listáját. Továbbá mérlegelendő az is, hogy egyes módszerek milyen számítási igénnyel és pontossággal oldják meg a nemlinearitásból 
+következő közönséges diferenciál egyenletrendszert, vagy milyen nem triviális egyszerűsítésekkel (akár az egyenletrendszer másképpen való felírásával, akár algebrai átalakítások 
+segítségével) próbálják ezt minél jobban optimalizálni.
+
+A K-módszer azzal igyekszik csökkenteni a számítási időt, hogy az áramkör lineáris és nemlineáris részáramkörökre bontása után először a nemlineáris rész kimenetét számolja ki 
+geometriai módszerek segítségével, majd csak ezután számolja ki a további szükséges változókat.
+
+Korábban ezt a módszert a kutatott irodalom alapján nem hasonlították össze a gyakran használt hátralépő Euler módszerrel. Ennek a dokumentumnak a célja, hogy megmutassa, miben 
+kölünbözik és miben hasonlít a K-módszer a hátralépő Euler módszerhez, illetve hogyan kapcsolódnak egymáshoz. Emellett részletezi azt is, hogy mikor éri meg a K-módszert az 
+előrelépő Euler-módszer helyett használni, és a lehetséges alkalmazási területeit.
+
+A K-módszer alkalmazásának demonstrálásához az Orange Crush 20L gitárerősítőt modelleztem, majd írtam ez alapján egy VST3 plugint a JUCE fejlesztői környezetben. Az egész folyamatot 
+részletesen ismertetem: a K-módszer elméletét, gyakorlati használatát egy példán keresztül, az erősítő áramkör elemzésének, részekre bontásának folyamatát, illetve a közben 
+felmerülő nehézségeket.
+
+Az erősítő áramkörét részáramkörökre bontottam, és ezeknek külön-külön valósítottam meg a diszkrét idejű modelljét. A lineáris részáramkörök
+átviteli függvényét bilineáris transzformáció segítségével alakítottam át a diszkrét időtartományba, a diódák miatt okozott nemlinearitásokat
+a K-módszer segítségével modelleztem, a műveleti erősítők szaturációját pedig egy egyszerű "cut-off" algoritmus segítségével valósítottam meg ott,
+ahol a valóságos rendszerben is előfordulhat ez a jelenség.
+
+A műveleti erősítők slew rate-jét illetve frekvenciamenetét nem vettem figyelembe, ezek ilyen komplex áramkör esetén elhanyagolhatóak a hangzás szempontjából.\vfill
+%\selectenglish
+
+
+%----------------------------------------------------------------------------
+% Abstract in English
+%----------------------------------------------------------------------------
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+These days, in the music industry and among musicians, instead of physical devices, digital plugins are used more and more often to achieve 
+the desired tone and effects, which can be run on computers. These plugins are run in real time and are mostly designed to emulate the 
+physical circuit of the desired effect to provide the exact same sound characteristics and tone, but they also leave some disadvantages 
+of the hardware behind.
+
+The advantages that the plugins provide to the physical hardware are the physical space it needs (it is significant at guitar amplifiers 
+and loudspeakers), their price is usually less, making recordings is easier with them, and most importantly, only a computer is needed to 
+use them.
+
+A lot of studios have already switched from the analog to the digital world. Plugins are more and more popular in live music and are used 
+more often by a lot of professional and hobby musicians.
+
+The design of these plugins is not simple, though. A lot of nonlinear components (diodes, vacuum tubes, etc.) are found in the circuits of 
+musical devices, which makes the process of digital modeling more difficult.
+
+It's a real challenge when someone wants to make a real-time running plugin. The sampling frequency can't be too high because the plugin is 
+real-time, thus reducing the list of applicable methods. It also needs to be considered what these methods are like in the sense of computational 
+time and precision of solving the ordinary differential equation system, which is caused by nonlinearity, or with what kind of non-trivial 
+simplifications (defining the equation system differently or using algebraic transformations) do they try to optimize it.
+
+The K-method tries to reduce computational time by calculating first the nonlinear subcircuit's output with geometric methods after separating 
+the circuit into a linear and non-linear subcircuit, and only after that calculates the other needed variables.
+
+Based on the researched literature, this method hasn't been compared to the commonly used Euler method. The paper's goal is to show the differences 
+and the similarities of the K-method to the backward Euler method and what the connection is between the two. It also describes when it's better to 
+use the K-method instead of the backward Euler method and its use cases.
+
+I modeled the Orange Crush 20L guitar amplifier with the K-method, and I programmed a VST3 plugin in the JUCE framework. I present the whole 
+procedure in great detail: the theory of the K-method, its practical usage presented on an example, the steps of modeling the amplifier's 
+circuit and how it is separated into parts, and I mention the difficulties along the process.
+
+I separated the amplifier circuit into parts and modeled each separately. The linear parts are modeled with the bilinear transform, the 
+nonlinearity caused by diodes is solved with the K-method, and the operational amplifier saturation is solved with a simple cut-off algorithm 
+where it can occur in the physical system.
+
+The operational amplifier slew rate and frequency dependence are not modeled; these factors are not that decisive in the sound of a complex 
+circuit like this. 
+\vfill
+\cleardoublepage
+
+\selectthesislanguage
+
+\newcounter{romanPage}
+\setcounter{romanPage}{\value{page}}
+\stepcounter{romanPage}
