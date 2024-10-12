@@ -53,10 +53,10 @@ küszöböltük.
     \caption{A rendszerből el lett távolítva a késleltetés nélküli rész; ebben a formában már nincs számítási probléma}
 \end{figure}
 
-\section{A K-módszer elemzése}
+\section{A K-módszer elemzése} \label{bilinearK}
 
 Egy általános kauzális, idő-invariáns rendszernek az általános állapotváltozós leírása az alábbi alakban felírható \cite{borin}\cite{borin2}\cite{otherK}:
-\begin{subnumcases}{}
+\begin{subnumcases}{\label{avlna}} 
     \mathbf{w'}=\mathbf{Aw}+\mathbf{Bu}+\mathbf{Cy} \label{kw}\\
     \mathbf{x}=\mathbf{Dw}+\mathbf{Eu}+\mathbf{Fy} \label{kx}\\
     \mathbf{y}=\mathbf{f}(\mathbf{x}) \label{ky}
@@ -90,15 +90,11 @@ az inverzével beszorozva a két oldalt:
 \end{equation}
 A könnyebb felírás érdekében új segédváltozók bevezetése ajánlott.
 \begin{eqnarray}
-    \mathbf{G} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}\mathbf{C}
-    \label{G}
-\end{eqnarray}
-\begin{eqnarray}
-    \mathbf{H} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}(h\mathbf{I}+\mathbf{A})
-    \label{H}
-\end{eqnarray}
-\begin{eqnarray}
-    \mathbf{J} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}
+    &\mathbf{G} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}\mathbf{C}
+    \label{G}\\
+    &\mathbf{H} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}(h\mathbf{I}+\mathbf{A})
+    \label{H}\\
+    &\mathbf{J} \triangleq (h\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}
     \label{J}
 \end{eqnarray}
 Ezeket behelyettesítve:
