@@ -8,3 +8,24 @@ Az állapotteres módszerek kiindulási alapja, hogy az áramkörnek szükséges
 \begin{equation}
     \mathbf{w'}=\mathbf{Aw}(t)+\mathbf{Bu}(t)+\mathbf{Cf}(\mathbf{Dw}(t)+\mathbf{Eu}(t)+\mathbf{Ff}(...))
 \end{equation}
+Az egyenletrendszerben a $\mathbf{w}$ az állapotvektor, $\mathbf{u}$ a gerjesztés, $\mathbf{f}$ pedig egy nemlineáris függvény.
+
+Laplace-transzformáció után az egyenletrendszer alakja:
+\begin{equation}
+    s\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{Cf}(\mathbf{DW}(s)+\mathbf{EU}(s)+\mathbf{Ff}(...))
+\end{equation}
+
+Ezután a diszkretizálására van szükség. Leggyakrabban az állapotteres módszerek ebben a lépésben fognak különbözni, hiszen kulcsfontosságú, hogy hogyan fogják a deriváltat közelíteni. Ez fogja meghatározni a diszkrét rendszer stabilitását, hatása lesz a számítási igényre (a kifejezés bonyolultsága), és a hiba nagyságát, amivel eltér az analóg rendszertől (referencia a fejezetre ahol be vannak mutatva).
+\begin{equation}
+    s \approxeq l(z)
+\end{equation}
+Ezt behelyettesítve:
+\begin{equation}
+    l(z)\mathbf{W}(z)=\mathbf{AW}(z)+\mathbf{BU}(z)+\mathbf{Cf}(\mathbf{DW}(z)+\mathbf{EU}(z)+\mathbf{Ff}(...))
+\end{equation}
+Inverz z-transzformáció és rendezés után az egyenlet alakja:
+\begin{equation}
+    \mathbf{w}[n]=szumma....Hiwn-i......\mathbf{Hw}[n-1]+\mathbf{Gu}(z)+\mathbf{Cf}(\mathbf{DW}(z)+\mathbf{EU}(z)+\mathbf{Ff}(...))
+\end{equation}
+
+
