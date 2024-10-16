@@ -1,0 +1,81 @@
+\chapter{Az implicit Euler módszer és a K-módszer összehasonlítása}
+
+A nemlineáris áramkörök szimulációjában fontos szempont a cél alkalmazás. Ha a szimuláció célja a pontosság, és nem követelmény a valósidejűség, akkor gyakran olyan megoldásokat alkalmaznak, ahol az állapotváltozós alakban leírt rendszer egyenleteiben a deriváltat minél pontosabban közelítik, így a kifejezés is egyre bonyolultabb, ebből következően nagyobb számításigényű lesz. Erre a célra gyakran használt módszerek a Runge-Kutta módszerek stb. HIVATKOZÁÁÁÁÁÁÁÁÁÁÁÁÁÁS!!!!
+
+A pontosság növelése érdekében még arra is lehetőségünk van, hogy a mintavételi frekvenciát növeljük. Így egyre rövidebb időközök lesznek a minták között, ami azért előnyös, mert minél kisebb az idő, annál kisebb a változás, és annál kisebb a változás, és annál jobban közelítjük a folytonos idejű esetet, ahol $\Delta t \rightarrow 0$. 
+
+A valós idejű szimuláció megvalósításánál viszont a pontosságot nem lehet minden határon túl növelni a rohamosan növekvő számítási igény miatt. A mintavételi frekvencia gyakran adott, a növeléséhez használt interpolálás, majd decimálás szintén költséges. BLABLABLA
+
+\section{Diszkretizálás}
+Mindkét módszer esetén először szükség van az állapotváltozós alak felírására. Ahhoz, hogy hiteles és pontos összehasonlítást tudjunk megvalósítani, a diszkretizációt mindkét módszer esetén ugyan úgy végezzük el: a deriváltat a (\ref{bwEuler}) összefüggéssel közelítjük.
+
+\subsection{Implicit Euler módszer}
+Egy kauzális, idő-invariáns rendszer állapotváltozós leírásának általános alakja, ha az felbontható egy memória nélküli nemlineáris-, és egy lineáris dinamikus részre:
+\begin{equation}
+    \mathbf{w}'=\mathbf{Aw}+\mathbf{Bu}+\mathbf{Cy(\mathbf{Dw}+\mathbf{Eu}+\mathbf{Fy}(...))}
+\end{equation}
+ahol $y$ egy nemlineáris függvény.\\
+Laplace-transzformálva és behelyettesítve:
+\begin{equation}
+    s\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{Cy}(\mathbf{DW}(s)+\mathbf{EU}(s)+\mathbf{Fy}(...))
+\end{equation}
+\begin{equation}
+    \frac{1-z^{-1}}{T}\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{Cy}(\mathbf{DW}(s)+\mathbf{EU}(s)+\mathbf{Fy}(...))
+\end{equation}
+\begin{equation}
+    \frac{1}{T}\mathbf{W}(z)-\mathbf{AW}(z)=\frac{z^{-1}}{T}\mathbf{W}(z)+\mathbf{BU}(z)+\mathbf{Cy}(\mathbf{DW}(z)+\mathbf{EU}(z)+\mathbf{Fy}(...))
+\end{equation}
+\begin{equation}
+    (\frac{1}{T}\mathbf{I}-\mathbf{A})\mathbf{W}(z)=z^{-1}\frac{1}{T}\mathbf{W}(z)+\mathbf{BU}(z)+\mathbf{Cy}(\mathbf{DW}(z)+\mathbf{EU}(z)+\mathbf{Fy}(...))
+\end{equation}
+Ezt z-tartományból visszaalakítva:
+\begin{equation}
+    (\frac{1}{T}\mathbf{I}-\mathbf{A})\mathbf{w}[n]=\frac{1}{T}\mathbf{w}[n-1]+\mathbf{Bu}[n]+\mathbf{Cy}(\mathbf{Dw}[n]+\mathbf{Eu}[n]+\mathbf{Fy}(...))
+\end{equation}
+\begin{equation}
+    \mathbf{w}[n]=(\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}(\frac{1}{T}\mathbf{w}[n-1]+\mathbf{Bu}[n]+\mathbf{Cy}(\mathbf{Dw}[n]+\mathbf{Eu}[n]+\mathbf{Fy}(...)))
+\end{equation}\\
+Új változókat bevezetve:
+\begin{eqnarray}
+    &\mathbf{H}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\frac{1}{T}\\
+    &\mathbf{J}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}\\
+    &\mathbf{G}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\mathbf{C}
+\end{eqnarray}
+\begin{equation}
+    \mathbf{w}[n]=\mathbf{Hw}[n-1]+\mathbf{Ju}[n]+\mathbf{Gy}(\mathbf{Dw}[n]+\mathbf{Eu}[n]+\mathbf{Fy}(...))
+\end{equation}
+Minden egyes új érték kiszámításához ezt az egyenletet kell megoldani, gyakran a Newton-Rhapson vagy az intervallumfelezés módszerrel, függően a nemlineáris függvénytől. 
+
+Érdemes megjegyezni, hogy ez a lépés csak abban az esetben történhet meg, ha $\mathbf{F}=0$, hiszen az egyenletben egy ismeretlen változó megtalálható a nemlineáris és a lineáris részben is, illetve a nemlineáris részben megfigyelhető egy visszacsatolás, amit az általános numerikus módszerek nem tudnak kezelni. 
+
+
+
+
+\subsection{K-módszer}
+K-módszer esetén az egyenletrendszert (\ref{avlna}) alakban kell felírni. A \ref{bilinearK} fejezetben az egyenletrendszer a bilineáris transzformációval lett diszkretizálva, de a megfelelő összehasonlítás érdekében szükséges a hátralépő Euler módszerben használt közelítéssel is levezetni. A végeredmény ugyan az lesz annyi különbséggel, hogy a nemlineáris függvény egy változóval van elnevezve.
+
+\begin{equation}
+    s\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{CY}(s)
+\end{equation}
+\begin{equation}
+    \frac{1-z^{-1}}{T}\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{CY}(s)
+\end{equation}
+\begin{equation}
+    \frac{1}{T}\mathbf{W}(z)-\mathbf{AW}(z)=\frac{z^{-1}}{T}\mathbf{W}(z)+\mathbf{BU}(z)+\mathbf{CY}(z)
+\end{equation}
+\begin{equation}
+    (\frac{1}{T}\mathbf{I}-\mathbf{A})\mathbf{W}(z)=z^{-1}\frac{1}{T}\mathbf{W}(z)+\mathbf{BU}(z)+\mathbf{CY}(z)
+\end{equation}
+Ezt z-tartományból visszaalakítva:
+\begin{equation}
+    (\frac{1}{T}\mathbf{I}-\mathbf{A})\mathbf{w}[n]=\frac{1}{T}\mathbf{w}[n-1]+\mathbf{Bu}[n]+\mathbf{Cy}[n]
+\end{equation}
+Új változókat bevezetve:
+\begin{eqnarray}
+    &\mathbf{H}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\frac{1}{T}\\
+    &\mathbf{J}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\mathbf{B}\\
+    &\mathbf{G}\triangleq (\frac{1}{T}\mathbf{I}-\mathbf{A})^{-1}\mathbf{C}
+\end{eqnarray}
+\begin{equation}
+    \mathbf{w}[n]=\mathbf{Hw}[n-1]+\mathbf{Ju}[n]+\mathbf{Gy}[n]
+\end{equation}
