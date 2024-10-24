@@ -1,0 +1,137 @@
+\chapter{A K-módszer összehasonlítása más állapotteres módszerekkel}
+
+Áramkör szimulációt több megközelítéssel is meg lehet megvalósítani. Ezek a megközelítések három nagy csoportba sorolhatóak: állapotteres módszerek, digitális hullámszűrő módszer és a fekete doboz módszerek~\cite{book}. Ebben a fejezetben az állapotteres módszerek közül a K-módszert és a legeltejedtebb, valós idejű szimulációnál használt állapotteres módszereket fogom összehasonlítani.
+
+\section{Az állapotteres módszerek}
+
+Az állapotteres módszerek kiindulási alapja, hogy az áramkörnek szükséges felírni az állapotváltozós leírását:
+\begin{equation}
+    \mathbf{\dot{w}}=\mathbf{Aw}(t)+\mathbf{Bu}(t)+\mathbf{Cf}(\mathbf{Dw}(t)+\mathbf{Eu}(t)+\mathbf{Ff}(\ldots))
+    \label{avlnaTDK}
+\end{equation}
+Az egyenletrendszerben a $\mathbf{w}$ az állapotvektor, $\mathbf{u}$ a gerjesztés, $\mathbf{f}$ pedig egy nemlineáris függvény.
+
+Ezután diszlretizálásra van szükség. Ez két különböző módon is megtehető: vagy a fentebb említett deriváltat egyből helyettesítjük az azt közelítő kifejezéssel, vagy ha az nem kifejezhető, akkor Laplace-transzformáció után az $s$ tartományból behelyettesítéssel áttérünk a $z$ tartományba, majd rendezés után inverz-z transzformálva megkapjuk a diszkretizált állapotegyenletet.
+
+Laplace-transzformáció esetén az egyenletrendszer alakja:
+\begin{equation}
+    s\mathbf{W}(s)=\mathbf{AW}(s)+\mathbf{BU}(s)+\mathbf{Cf}(\mathbf{DW}(s)+\mathbf{EU}(s)+\mathbf{Ff}(\ldots))
+\end{equation}
+
+Leggyakrabban az állapotteres módszerek a diszkretizálásban fognak különbözni, hiszen kulcsfontosságú, hogy hogyan fogják a deriváltat közelíteni. Ez fogja meghatározni a diszkrét rendszer stabilitását, hatása lesz a számítási igényre (a kifejezés bonyolultsága), és a hiba nagyságát, amivel eltér az analóg rendszertől (referencia a fejezetre ahol be vannak mutatva).
+\begin{equation}
+    s \approxeq l(z)
+\end{equation}
+Ezt behelyettesítve:
+\begin{equation}
+    l(z)\mathbf{W}(z)=\mathbf{AW}(z)+\mathbf{BU}(z)+\mathbf{Cf}(\mathbf{DW}(z)+\mathbf{EU}(z)+\mathbf{Ff}(\ldots))
+\end{equation}
+Inverz z-transzformáció és rendezés után az egyenlet alakja:
+\begin{equation}
+    \mathbf{w}[n]=\sum_{i = 1}^{M}  \mathbf{H}_i \mathbf{w}[n-i]+\sum_{j=0}^{N}\mathbf{J}_j \mathbf{u}[n-j]+\sum_{k=0}^{P}\mathbf{G}_k \mathbf{f(\mathbf{Dw}[n-k] +\mathbf{Eu}[n-k]+\mathbf{Ff}(\ldots))}
+\end{equation}
+
+\subsection{Euler-módszerek}
+
+Az előrelépő- és hátralépő Euler-módszert gyakran alkalmazzák a gyakorlatban (sok ref), de valós idejű szimuláció esetén csak a hátralépő Euler-módszer alkalmazható, hiszen nagyon gyakran a stabilitási feltételnek (\ref{fwEulerSection}) teljesüléséhez nagy mintavételi frekvenciára van szükség.
+
+A hátralépő Euler-módszerben a diszkretizálás után az egyenlet mindig implicit lesz, így azt valamilyen numerikus zérushelykereső módszerrel kell megoldani (\ref{bwEulerSection}). 
+
+Ha az $\mathbf{F}$ változó a (\ref{avlnaTDK}) egyenletben nem $0$, akkor nem elég egy numerikus zérushelykereső algoritmus az egyenlet megoldásához.
+
+Ekkor az egyenlet alakja:
+\begin{equation}
+    \mathbf{w}[n]=\mathbf{Hw}[n-1]+\mathbf{Ju}[n]+\mathbf{Gf}(\mathbf{Dw}[n]+\mathbf{Eu}[n]+\mathbf{Ff}(\ldots))
+\end{equation}
+Látható, hogy az egyenlet implicit, hiszen az egyenlet bal oldalán és a függvény argumentumaként is szerepel $\mathbf{w}[n]$. Bonyolultabb áramkörök esetén előfordul, hogy a nemlinearitás visszahat magára (hasonló egy visszacsatoláshoz), és ekkor egy végtelen függvény egymásbaágyazódás figyelhető meg. Ezt a két problémát egyszerre nem tudják kezelni a numerikus zérushelykereső módszerek, így más megközelítés szükséges.
+
+Egy lehetőség a megoldásra az egyenlet szétválasztása olyan formában, ahogyan azt a K-módszer teszi (\ref{KSep}). Előbb a nemlineáris rész kimenete lesz meghatározva, majd csak utána lesz az állapotvektor kiszámolva és aktuális értékeire frissítve.
+
+A nemlineáris rész kimenetét elnevezve $y[n]$-nek és a szétválasztott egyenletrendszer felírva:
+\begin{equation}
+    \begin{cases}
+        \mathbf{w}[n]=\mathbf{Hw}[n-1]+\mathbf{Ju}[n]+\mathbf{Gy}[n]\\
+        \mathbf{y}[n]=\mathbf{f}(\mathbf{Dw}[n]+\mathbf{Eu}[n]+\mathbf{Fy}[n])
+    \end{cases}
+\end{equation}
+Ez a lépés még nem oldotta meg a problémát, viszont az állapotvektor egyenletét a nemlineáris rendszer kimenetének egyenletébe behelyettesítve $\mathbf{w}[n]$-től független egyenletet kapunk:
+\begin{equation}
+    \mathbf{y}[n]=\mathbf{f}(\mathbf{D}(\mathbf{Hw}[n-1]+\mathbf{Ju}[n]+\mathbf{Gy}[n])+\mathbf{Eu}[n]+\mathbf{Fy}[n])
+\end{equation}
+Ezt az egyenletet már képesek a zérushelykereső módszerek megoldani. Megoldás után a nemlineáris rész kimenetét visszahelyettesítve $\mathbf{w}[n]$ egyenletébe megkapjuk az állapotvektor aktuális elemeit.
+
+A K-módszerben is alkalmazott egyenletszétválasztással meg tudtunk oldani egy olyan egyenletet, amiben két probléma van egyszerre jelen: szétválasztás és behelyettesítés után a két problémát külön választottuk, amiket külön-külön meg lehet oldani. Bonyolultabb áramkörökben ezt a plusz lépést gyakran végre kell hajtani.
+
+\subsection{K-módszer}
+A K-módszer az egyenletek szétválasztásával kezd, függetlenül az $\mathbf{F}$ változótól. Szétválasztás után ugyanúgy a nemlineáris rész kimenetét számolja ki először, de ehhez nem numerikus zérushelykereső módszert használ, hanem alkalmazza a Dini-tételt~\cite{borin}, ami kimondja, hogy egy implicit függvényhez található egy olyan explicit pár, ami ha néhány feltétel teljesül, akkor meg fognak egyezni~(\ref{dini}).
+
+Ezt az explicit függvényt ki lehet offline számolni, letárolni egy tömbben, és így meg lehet oldani az egyenletet egy tömbben való kereséssel a numerikus zérushelykereső módszer helyett.
+
+Érdemes megjegyezni, hogy mivel a Dini-tétel alkalmazásának az a feltétele, mint a Newton-módszernek, így csak akkor lehet alkalmazni, ha a Newton-módszerrel is meg lehetne oldani az egyenletet~\cite{otherK}.
+
+\section{Számítási igény}
+
+Valós idejű szimuláció esetén kritikus fontossággal bír a választott módszer számítási igénye, hiszen megadott időkereten belül kell a kimenetet kiszámolni.
+
+\subsection{Hátralépő Euler-módszer}
+
+$\mathbf{F}=0$ esetén a módszer a Newton-módszer számítási igényével és az előtte elvégzett műveletekkel egyezik meg. A Newto-módszer számítási igénye $O((\log{n})F(n))$, ahol $F(n)$ a $\mathbf{f(x)/\dot{f}(x)}$ kiszámolásának számítási igénye $n$ számjegyű pontosság esetén~\cite{wikiNewton}. Az előtte elvégzett műveletek 3 szorzásból és egy összeadásból állnak ($\mathbf{Hw}[n-1]+\mathbf{Ju}[n]$, és $\mathbf{Eu}[n]$), amiknek számításigényük $O(3n^2)$ és $O(n)$. 
+
+$\mathbf{F} \neq 0$ esetén a Newton-módszer számításigénye, az azelőtt ($\mathbf{DHw}[n-1]+\mathbf{(DJ+E)u}[n]$, és $\mathbf{DG+F}$ kiszámítása), és az azután kiszámolt értékek számításigénye. A Newton-módszer számítási igénye a fentebb említett $O((\log{n})F(n))$. A Newton-módszer előtti műveletek 6 szorzásból, 3 összeadásból állnak, amelyeknek $O(6n^2)$ és $O(6n)$ a komplexitásuk. A Newton-módszer után elvégezendő három szorzásé $O(3n^2)$, a két összeadásé pedig $O(2n)$, $n$ számjegy esetén.
+
+\begin{center}
+    \begin{tabular}{ |c|c|c|c|c| } 
+     \hline
+      & \bf{előtt} & \bf{Newton-módszer} & \bf{után} & \bf{összesen} \\ 
+     \hline
+     $\mathbf{F}=0$ & \makecell{$3O(n^2) + O(n)$ \\ $=O(n^2)$} & $O((\log{n})F(n))$ & - & $O((\log{n})F(n))$ \\ 
+     \hline
+     $\mathbf{F}\neq0$ &  \makecell{$6O(n^2)+6O(n)$ \\ $=O(n^2)$} & $O((\log{n})F(n))$ & \makecell{$3O(n^2)+2O(n)$ \\ $=O(n^2)$} & $O((\log{n})F(n))$\\ 
+     \hline
+    \end{tabular}
+\end{center}
+
+A táblázatból látszik, hogy a hátralépő Euler-módszer komplexitását mindig a nemlineáris függvény, és annak deriváltja fogja meghatározni (ha már található benne szorzás művelet, akkor komplexitása minimum $O((\log{n})n^2)$).
+
+\subsection{K-módszer}
+
+A K-módszert numerikus zérushelykereső algoritmus ugyan azt a számításigényt eredményezne, hiszen a két algoritmus között a különbség a diszkretizálási módszer lenne, ami csak összeadás és szorzás műveleteket adna a komplexitáshoz.
+
+A nemlineáris egyenlet megoldása előtt 4 szorzás és 4 összeadás található, komplexitásuk $4O(n^2)$ és $4O(n)$.
+
+Offline tömbbe letárolás esetén csak az abban való keresés lesz, ami számításigényt igényel szemben az állandó hányados számítással a Newton-módszerben. A tömböt legenerálni rendezetten érdemes, ekkor a legrosszabb esetben $m$ elem esetén egy bináris keresés $\log_2 m$ iteráció alatt talál meg.
+
+Az összehasonlítások $n$ számjegy esetén $O(n)$ komplexitásúak, és a keresés lefutása után  3 szorzás és 3 összeadás található, amiknek $3O(n^2)$ és $3O(n)$ a komplexitásuk.
+
+\begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+      \bf{előtt} & \bf{Bináris keresés} & \bf{után} & \bf{} \\ 
+     \hline
+     \makecell{$4O(n^2) + 4O(n)$ \\ $=O(n^2)$} & $O(n\log{m})$ & \makecell{$3O(n^2) + 3O(n)$ \\ $=O(n^2)$} & $O(n^2)$ \\ 
+     \hline
+    \end{tabular}
+\end{center}
+
+A K-módszernek a komplexitása $O(n^2)$, hiszen a tömb nagyságát növelve logaritmikusan nő a számítás igény, ami még $32$ bites float pontosság esetén is utólérhetetlen az m nagyságával, hogy a $O(n\log{m})$ domináljon. Az $O(n^2)$-es futásidő a~\cite{book} irodalomban is megtalálható levezetés nélkül.
+
+\section{Az összehasonlítás összefoglalása}
+A K-módszer előnyei a hátralépő Euler-módszerrel szemben:
+\begin{itemize}
+    \item A hátralépő Euler-módszer nagyobb számítási igényű, mint a K-módszer ($O(n^2) < O((\log{n})F(n))$)
+    \item A K-módszer pontosabb, mivel pontosabban közelíti a deriváltat a hátralépő Euler-módszernél, és lehetőséget ad nagyobb fokú közelítések használatához is
+    \item A hátralépő Euler-módszer végrehajtási menete függ az állapotváltozós leírás alakjától, ezzel szemben a K-módszer mindig ugyan azt a sémát használja
+    \item A K-módszerben a letárolt tömb méretét lehet optimalizálni: $y$ tengelyre szimmetrikus függvény esetén elég csak a pozitív x értékek eltárolása, a tömb méretének csökentésével megjelenő pontatlanságot interpolációval egyensúlyozhatjuk, illetve lineáris interpoláció esetén a lineáris részeket lehetőségünk van ritkábban letárolni
+\end{itemize}
+A hátralépő Euler-módszer előnyei a K-módszerrel szemben:
+\begin{itemize}
+    \item Kevesebb memóriát foglal futás közben (a K-módszer által letárolt tömböt végig a futás során meg kell tartani)
+    \item Ha a modellezett részáramkörben található változtatható paraméter (potméter, érzékelők stb.), akkor minden egyes változásnál a K-módszernél ki kell számolni a mátrixokat és a letárolandó tömböt
+    \item A tömb legenerálása előtt meg kell győződni arról, hogy milyen reális maximum és minimum értékek lehetségesek a nemlineáris rész kimeneteként
+\end{itemize}
+A két módszer egyező tulajdonságai:
+\begin{itemize}
+    \item Mindkét módszer alkalmazási feltételhez kötött (ez a feltétel gyakran teljesül a zenei alkalmazáshoz tervezett áramkörökben)
+\end{itemize}
+
+\chapter{A K-módszer lehetséges felhasználási területei}

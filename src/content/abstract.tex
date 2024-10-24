@@ -1,0 +1,43 @@
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\selecthungarian
+
+%----------------------------------------------------------------------------
+% Abstract in Hungarian
+%----------------------------------------------------------------------------
+\chapter*{Összefoglalás}\addcontentsline{toc}{chapter}{Összefoglalás}
+
+Napjainkban a zeneiparban és a zenészek körében a hangzás megváltoztatása céljából alkalmazott hardver-effektek helyett egyre gyakrabban használnak számítógépen futtatható pluginokat. Ezek a pluginok valós időben futnak, és gyakran a fizikai effekt áramköre alapján valósítják meg őket, lehetőleg úgy, hogy ugyanazt a hangzásélményt nyújtsák.
+
+Ezeknek a pluginoknak az elkészítése nem triviális: a zenei eszközök áramkörében gyakran találhatóak nemlineáris elemek (diódák, elektroncsövek stb.), amelyek megnehezítik digitális modellezésüket. A valós idejűség követelménye miatt olyan módszereket kell találni, amelyek elfogadható számítási igény mellett is megfelelő pontossággal oldják meg a nemlineáris differenciálegyenlet rendszert. Ezek a módszerek jellemzően nem triviális egyszerűsítésekkel (akár az egyenletrendszer másképpen való felírásával, akár algebrai átalakítások segítségével) próbálják ezt elérni.
+
+Nemlineáris differenciálegyenletek megoldására az egyik legegyszerűbb és leggyakrabban használt eljárások az úgynevezett Euler módszerek. Azonban az előrelépő Euler módszernél a modell stabilitása nem garantált, a hátralépő Euler módszer pedig a nemlineáris differenciálegyenlet numerikus megoldását igényli, ezzel nagy számítási igényt előidézve.
+
+A kevésbé ismert K-módszer a számítási igényt azzal igyekszik csökkenteni, hogy az áramkör lineáris és nemlineáris részáramkörökre bontása után először a nemlineáris rész kimenetét számolja ki geometriai módszerek segítségével, majd csak ezután számolja ki a további szükséges változókat. Korábban ezt a módszert a kutatott irodalom nem hasonlította össze az más állapotteres módszerekkel. A TDK dolgozat célja a K-módszer és a hátralépő Euler módszer kapcsolódásainak vizsgálata, valamint hasonlóságaik és különbségeik feltérképezése. Emellett a dolgozat azt is részletezi, hogy milyen előnyei és hátrányai vannak a K-módszernek a hátralépő Euler-módszerrel szemben, és a lehetséges alkalmazási területeit is ismerteti.
+
+A K-módszer bemutatásához az Orange Crush 20L gitárerősítőt modelleztem, illetve ez alapján egy valós időben futó VST3 plugint készítettem JUCE fejlesztői környezetben.\vfill
+%\selectenglish
+
+
+%----------------------------------------------------------------------------
+% Abstract in English
+%----------------------------------------------------------------------------
+\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract}
+In today's music industry and among musicians, instead of using hardware effects to alter sound, digital plugins are increasingly being used. These plugins are run in real time and are mostly designed to emulate the physical circuit of the desired effect, aiming to deliver the same listening experience.
+
+The design of these plugins is not trivial: the circuits of musical devices often contain nonlinear components (diodes, vacuum tubes, etc.), which complicates their digital modeling. Due to the real-time requirement, methods must be applied that can solve the ordinary differential equation caused by the nonlinearity with sufficient accuracy while having an acceptable computational demand. These methods typically achieve this through non-trivial simplifications (either by defining the equation system differently or through algebraic transformations).
+
+One of the simplest and most common methods used for solving nonlinear differential equations are the so-called Euler methods. However, with the forward Euler method, the stability of the system is not guaranteed, and with the backward Euler method, the numerical solving of a nonlinear differential equation is required.
+
+The lesser-known K-method tries to reduce the computational demand by dividing the circuit into a linear and nonlinear subsircuit. First, it calculates the output of the nonlinear part by geometric methods and only then calculates the other necessary variables. Previously, this method has not been compared to other state-space methods in the literature. The goal of this paper is to examine the connection between the K-method and the backward Euler method, as well as to detail their similarities and differences. Additionally, the paper details the advantages and disadvantages of the K-method against the backward Euler method and also outlines its possible application areas.
+
+To demonstrate the K-method, I have modeled the Orange Crush 20L guitar amplifier, and I have programmed a VST3 plugin in the JUCE framework.
+\vfill
+\cleardoublepage
+
+\selectthesislanguage
+
+\newcounter{romanPage}
+\setcounter{romanPage}{\value{page}}
+\stepcounter{romanPage}
