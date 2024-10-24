@@ -134,4 +134,21 @@ A két módszer egyező tulajdonságai:
     \item Mindkét módszer alkalmazási feltételhez kötött (ez a feltétel gyakran teljesül a zenei alkalmazáshoz tervezett áramkörökben)
 \end{itemize}
 
+
+
+
 \chapter{A K-módszer lehetséges felhasználási területei}
+A zenei alkalmazásokon kívül az élet sok területén használják a hátralépő Euler-módszert a közönséges differenciálegyenletek megoldásához. Ezek a differenciálegyenletek jól leírják a szimulálandó rendszert, és szimulálásuk során előre észrevehetőek hibák, amit lehet csak a prototípus gyártás után vettek volna észre, a rendszer különböző gerjesztésekre való reagálásának elemzését teszi lehetővé, illetve a különböző rendszerparaméterek megválasztását segítheti. 
+
+\section{Épületszerkezet tervezés, tesztelés}
+Az építőmérnöki szerkezettervezés során a hátralépő Euler-módszert az épületek, hidak teszteléséhez használják különböző terhelések esetén~\cite{structeng}. Szeizmikus, vagy akár szélterhelést szimulálva a dinamikai viselkedés vizsgálható, tesztelve így annak stabilitását és biztonságosságát.
+
+\section{Reakciókinetika}
+A reakciókinetikában a hátralépő Euler-módszert alkalmazzák a reakciósebességek és a reaktánsok, valamint a termékek koncentrációinak modellezésére kémiai folyamatokban~\cite{chemeng}.
+
+\section{Pénzügy}
+A pénzügyben a hátralépő Euler-módszert szokták használni opció árazási modellekben, amikben felmerülnek differenciálegyenletek~\cite{finance}.
+
+\\
+
+A felsoroltakon kívül még számos területen alkalmazzák a hátralépő Euler-módszert. Érdemes lenne helyette a K-módszert használni, már csak amiatt, hogy az eredmények pontosabbak legyenek a bilineáris transzformáció alkalmazásának köszönhetően. Emellett pedig ha fontos szempont a valós idejűség, akkor már a kisebb számítási igény miatt is megérné a K-módszert használni.   
